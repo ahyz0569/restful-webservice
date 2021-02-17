@@ -40,4 +40,13 @@ public class UserController {
         return ResponseEntity.created(location).build();
     }
 
+    @DeleteMapping("/users/{id}")
+    public void deleteUser(@PathVariable int id) {
+        User user = userService.deleteById(id);
+
+        if (user == null) {
+            throw new UserNotFoundException("ID[" + id + "] is not found");
+        }
+    }
+
 }
