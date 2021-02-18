@@ -49,4 +49,15 @@ public class UserController {
         }
     }
 
+    @PutMapping("/users/{id}")
+    public ResponseEntity<Object> updateUser(@RequestBody User user, @PathVariable int id) {
+        User updateUser = userService.update(user, id);
+
+        if (updateUser == null) {
+            throw new UserNotFoundException("ID[" + id + "] is not found");
+        }
+
+        return ResponseEntity.noContent().build();  // 204 Status Code
+    }
+
 }
