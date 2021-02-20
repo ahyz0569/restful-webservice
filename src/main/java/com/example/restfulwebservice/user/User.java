@@ -1,5 +1,6 @@
 package com.example.restfulwebservice.user;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 
@@ -9,6 +10,7 @@ import java.time.LocalDate;
 
 @Data
 @AllArgsConstructor
+@JsonIgnoreProperties({"password", "ssn"})
 public class User {
     private Integer id;
 
@@ -17,4 +19,9 @@ public class User {
 
     @Past
     private LocalDate joinDate;
+
+//    @JsonIgnore
+    private String password;
+//    @JsonIgnore
+    private String ssn;
 }
