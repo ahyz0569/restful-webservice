@@ -1,5 +1,6 @@
 package com.example.restfulwebservice.user;
 
+import com.fasterxml.jackson.databind.ser.FilterProvider;
 import com.fasterxml.jackson.databind.ser.impl.SimpleBeanPropertyFilter;
 import com.fasterxml.jackson.databind.ser.impl.SimpleFilterProvider;
 import lombok.RequiredArgsConstructor;
@@ -20,8 +21,18 @@ public class AdminUserController {
     private final UserDaoService userService;
 
     @GetMapping("/users")
-    public List<User> retrieveAllUsers() {
-        return userService.findAll();
+    public MappingJacksonValue retrieveAllUsers() {
+        List<User> users = userService.findAll();
+
+        SimpleBeanPropertyFilter filter = SimpleBeanPropertyFilter
+                .filterOutAllExcept("id", "name", "joinDate", "password");
+
+        FilterProvider filters = new SimpleFilterProvider().addFilter("UserInfo", filter);
+
+        MappingJacksonValue mapping = new MappingJacksonValue(users);
+        mapping.setFilters(filters);
+
+        return mapping;
     }
 
     @GetMapping("/users/{id}")
