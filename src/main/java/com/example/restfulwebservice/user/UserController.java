@@ -1,6 +1,8 @@
 package com.example.restfulwebservice.user;
 
 import lombok.RequiredArgsConstructor;
+import org.springframework.hateoas.EntityModel;
+import org.springframework.hateoas.server.mvc.WebMvcLinkBuilder;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
@@ -21,13 +23,19 @@ public class UserController {
     }
 
     @GetMapping("/users/{id}")
-    public User retrieveUser(@PathVariable int id) {
+    public EntityModel<User> retrieveUser(@PathVariable int id) {
         User user = userService.findOne(id);
         if (user == null) {
             throw new UserNotFoundException("ID[" + id + "] is not found");
         }
 
-        return user;
+        // HATEOAS
+        EntityModel<User> model = EntityModel.of(user);
+        WebMvcLinkBuilder linkBuilder = WebMvcLinkBuilder.linkTo(
+                WebMvcLinkBuilder.methodOn(this.getClass()).retrieveAllUsers());
+        model.add(linkBuilder.withRel("all-users"));
+
+        return model;
     }
 
     @PostMapping("/users")
