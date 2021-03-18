@@ -5,6 +5,10 @@ logging:
 spring:
   messages:
     basename: messages
+  security:
+    user:
+      name: user
+      password: passw0rd
 
 management:
   endpoints:
